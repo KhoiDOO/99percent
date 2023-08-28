@@ -48,7 +48,8 @@ transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5
 trainset = Omniglot(root='./data', background=True, download=True, transform=transform)
 train_loader = DataLoader(trainset, batch_size=batch_size, shuffle=True)
 
-model = CNN(964)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = CNN(964).to(device=device)
 optimizer = torch.optim.Adam(model.parameters(), lr)
 criterion = torch.nn.CrossEntropyLoss()
 scheduler = CosineAnnealingLR(optimizer, len(train_loader)*epochs)
@@ -57,8 +58,8 @@ for epoch in range(epochs):
     train_loss = []
     train_accuracy = []
     for i, (data, labels) in tqdm(enumerate(train_loader), total=len(train_loader)):
-        outputs = model(data)
-        loss = criterion(outputs, labels)
+        outputs = model(data.to(device=device))
+        loss = criterion(outputs, labels.to(device=device))
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
