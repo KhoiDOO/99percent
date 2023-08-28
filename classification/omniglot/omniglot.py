@@ -48,7 +48,7 @@ transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5
 trainset = Omniglot(root='./data', background=True, download=True, transform=transform)
 train_loader = DataLoader(trainset, batch_size=batch_size, shuffle=True)
 
-model = CNN((1, 28, 28), 10)
+model = CNN(30)
 optimizer = torch.optim.Adam(model.parameters(), lr)
 criterion = torch.nn.CrossEntropyLoss()
 scheduler = CosineAnnealingLR(optimizer, len(train_loader)*epochs)
